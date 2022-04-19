@@ -62,8 +62,11 @@ class FeedParser {
       );
 
       $result->json_nodes[] = $rest_response->getBody();
-      $result->json_structs[] = $this->eventFormat( $rest_response->getBody());
 
+      if (method_exists($this,$this->rss_node_type . 'Format')) {
+        $result->json_structs[] =
+          $this->{$this->rss_node_type . 'Format'}( $rest_response->getBody());
+      }
       print("EVENT FIELDS\r\n");
       print_r($result->json_structs[count($result->json_structs)-1]);
       print("\r\n");
