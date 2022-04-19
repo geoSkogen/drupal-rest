@@ -1,8 +1,8 @@
-# Custom RSS Feed Client using Drupal Views and REST
-## - Prototype for Proof of Concept
+# Custom RSS Feed client with Drupal Views & REST
+### A prototype to illustrate proof of concept -
 ***
-#### Publish a custom RSS feed in Drupal by
-[creating a View in RSS format:](https://portlandstate.atlassian.net/wiki/spaces/WEBCOMM/pages/2387477334/RSS+Feeds+in+Drupal)
+## - using the Syndication site in a local dev environment.
+#### Publish a custom RSS feed in Drupal by [creating a View in RSS format:](https://portlandstate.atlassian.net/wiki/spaces/WEBCOMM/pages/2387477334/RSS+Feeds+in+Drupal)
 ##### (This example script uses custom content type 'event.')
 #### [Enable REST endpoints](https://portlandstate.atlassian.net/wiki/spaces/WEBCOMM/pages/2388918467/REST+endpoints+in+Drupal) for the resources used in the RSS View
 ##### (For this example, allow GET requests for content, i.e `/node` because 'event' is a custom content type.)
