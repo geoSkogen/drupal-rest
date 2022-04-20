@@ -1,4 +1,4 @@
-# GET the REST resources from a Drupal XML RSS feed
+# GET the Drupal REST resources from a custom XML RSS feed
 ## - using Views & REST UI Module
 ### A prototype to illustrate proof of concept -
 ### - with the Syndication site in a local dev environment.
