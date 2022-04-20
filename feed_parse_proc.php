@@ -51,6 +51,7 @@ $http_options = ["headers" => [], "body" => ''];
 $req_method = 'GET';
 
 $rss_node_type = !empty($argv[1]) ? $argv[1] : 'event';
+$rss_host = !empty($argv[2]) ? $argv[2] : 'syndication.ddev.site';
 $rss_uri = '/' . $rss_node_type . 's-rss.xml';
 
 $json_nodes = [];
@@ -60,7 +61,7 @@ $json_structs = [];
 $client = new GuzzleHttp\Client();
 $rss_response = $client->request(
   $req_method,
-  $url_origin . $rss_uri,
+  'https://' . $rss_host . $rss_uri,
   $http_options
 );
 $xml_str = clean_dev_xml($rss_response->getBody());

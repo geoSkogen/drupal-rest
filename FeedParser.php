@@ -76,6 +76,26 @@ class FeedParser {
   }
 
 
+  function eventFormat($resp_json) {
+    $resp_obj = json_decode($resp_json,true);
+    // Build data structure for FullCalendar JS API, et al.
+    $json_struct = array(
+      'tags' => [],
+      'title' => $resp_obj['title'][0]['value'],
+      'start' => $resp_obj['field_event_datetime_range_all'][0]['value'],
+      'end' => $resp_obj['field_event_datetime_range_all'][0]['end_value'],
+      'desc' => $resp_obj['field_description'][0]['value'],
+    );
+    $json_struct['monthly'] = !empty($resp_obj['field_monthly_event'][0]) ? $resp_obj['field_monthly_event'][0]['value'] : '';
+    $json_struct['weekly'] = !empty($resp_obj['field_weekly_event'][0]) ? $resp_obj['field_weekly_event'][0]['value'] : '';
+
+    foreach ($resp_obj['field_content_hub_tag'] as $tag_arr) {
+      $json_struct['tags'][] = $tag_arr['target_id'];
+    }
+    return json_encode($json_struct);
+  }
+
+
   protected function cleanDevXML($xml_str) {
     $html_comment_regex = [
       '/\<\!\-\-.*(\\r)?(\\n)?\-\-\>/',
@@ -93,24 +113,4 @@ class FeedParser {
     return $clean_xml_str;
   }
 
-
-  function eventFormat($resp_json) {
-    $resp_obj = json_decode($resp_json,true);
-    // Build data structure for FullCalendar JS API
-    $json_struct = array(
-      'tags' => [],
-      'title' => $resp_obj['title'][0]['value'],
-      'start' => $resp_obj['field_event_datetime_range_all'][0]['value'],
-      'end' => $resp_obj['field_event_datetime_range_all'][0]['end_value'],
-      'desc' => $resp_obj['field_description'][0]['value'],
-    );
-
-    $json_struct['monthly'] = !empty($resp_obj['field_monthly_event'][0]) ? $resp_obj['field_monthly_event'][0]['value'] : '';
-    $json_struct['weekly'] = !empty($resp_obj['field_weekly_event'][0]) ? $resp_obj['field_weekly_event'][0]['value'] : '';
-
-    foreach ($resp_obj['field_content_hub_tag'] as $tag_arr) {
-      $json_struct['tags'][] = $tag_arr['target_id'];
-    }
-    return json_encode($json_struct);
-  }
 }
