@@ -1,7 +1,7 @@
 # GET the REST resources from a Drupal XML RSS feed
-## - with Drupal Views & REST UI Module
+## - using Views & REST UI Module
 ### A prototype to illustrate proof of concept -
-### - using the Syndication site in a local dev environment.
+### - with the Syndication site in a local dev environment.
 ***
 #### Publish a custom RSS feed in Drupal by [creating a View in RSS format.](https://portlandstate.atlassian.net/wiki/spaces/WEBCOMM/pages/2387477334/RSS+Feeds+in+Drupal)
 ##### (This example script uses custom content type 'event.')
