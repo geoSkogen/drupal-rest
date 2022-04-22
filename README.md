@@ -15,7 +15,7 @@
 #### *Syndication_domain_name*  
 #### *CSV_of_tag_ids*
 #### Example:
-### `php parse_feed.php event syndication.ddev.site 3171,826`
+#### `php parse_feed.php event syndication.ddev.site 3171,826`
 ***
 #### `Subscriber` exposes its array of Drupal Node objects via `getNodesJSON`.
 ***
