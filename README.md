@@ -10,14 +10,14 @@
 ***
 #### Run `composer install` for the Guzzle HTTP library.
 ***
-#### Simulate a subscription import on the CLI with the 'parse_feed' script + 3 arguments:*
-#### $ php parse_feed.php *RSS_feed_type* *syndication_domain_name* *CSV_of_tag_ids*
+### Simulate a subscription import on the CLI with the 'parse_feed' script + 3 arguments:*
+#### $  php  parse_feed.php  *RSS_feed_type*  *Syndication_domain_name*  *CSV_of_tag_ids*
 #### Example:
 #### `php parse_feed.php event syndication.ddev.site 3171,826`
 ***
 #### `Subscriber` exposes its array of Drupal Node objects via `getNodesJSON`.
 ***
-## Dev Notes -
+## Dev Notes
 ### Custom Data Structures
 #### `FeedParser::eventFormat` returns JSON tailored to the FullCalendar JS API
 `Subscriber` exposes this tailored data array via `getStructuresJSON` when 'event' is passed to the parser as the RSS feed type.
@@ -29,4 +29,5 @@ Use the logic in {RSS_Feed_Type}Format methods to shape the custom data that wil
 *The CLI command introduces a future layer of abstraction,
 where each subscribing site may have a `Syndication` object,
 executing the logic in this repo's parse_feed.php script, but via a public method that accepts the same arguments,
- e.g.`$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr);`
+ e.g.
+#### `$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr);`
