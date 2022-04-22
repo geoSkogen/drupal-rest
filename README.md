@@ -10,10 +10,12 @@
 ***
 #### Run `composer install` for the Guzzle HTTP library.
 ***
-### Simulate a subscription import on the CLI with the 'parse_feed' script + 3 arguments:*
-#### $  php  parse_feed.php  *RSS_feed_type*  *Syndication_domain_name*  *CSV_of_tag_ids*
+### Simulate a subscription import on the CLI by running the 'parse_feed' script with 3 arguments:*
+#### *RSS_feed_type*
+#### *Syndication_domain_name*  
+#### *CSV_of_tag_ids*
 #### Example:
-#### `php parse_feed.php event syndication.ddev.site 3171,826`
+### `php parse_feed.php event syndication.ddev.site 3171,826`
 ***
 #### `Subscriber` exposes its array of Drupal Node objects via `getNodesJSON`.
 ***
@@ -30,4 +32,4 @@ Use the logic in {RSS_Feed_Type}Format methods to shape the custom data that wil
 where each subscribing site may have a `Syndication` object,
 executing the logic in this repo's parse_feed.php script, but via a public method that accepts the same arguments,
  e.g.
-#### `$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr);`
+##### `$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr);`
