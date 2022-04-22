@@ -1,7 +1,7 @@
-# GET the Drupal REST resources from a custom XML RSS feed
-## - using Views & REST UI Module
-### A prototype to illustrate proof of concept -
-### - with the Syndication site in a local dev environment.
+## GET the Drupal REST resources from a custom XML RSS feed
+#### - using Views & REST UI modules
+### A prototype to illustrate proof of concept
+#### - with the Syndication site in a local dev environment.
 ***
 #### Publish a custom RSS feed in Drupal by [creating a View in RSS format.](https://portlandstate.atlassian.net/wiki/spaces/WEBCOMM/pages/2387477334/RSS+Feeds+in+Drupal)
 ##### (This example script uses custom content type 'event.')
@@ -10,10 +10,21 @@
 ***
 #### Run `composer install` for the Guzzle HTTP library.
 ***
-#### Execute RSS-to-JSON parsing on the CLI with the 'parse_feed' script - e.g.
-`php parse_feed.php event syndication.ddev.site`
+#### Simulate a subscription import on the CLI with the 'parse_feed' script - e.g.
+`php parse_feed.php event syndication.ddev.site 3171,826`
+##### ($ php parse_feed.php {rss_feed_type} {syndication_domain_name} {csv_of_tag_ids})
+This would introduce a future layer of abstraction,
+where each subscribing site may have a `Syndication` object,
+executing this script's logic in a public method that accepts the same arugments, e.g.
+`$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr);`
 ***
-#### `FeedParser::parseFeed` returns an object consisting of two arrays:
-#### `result->json_nodes` contains the raw JSON responses to the GET requests for each node in the feed
-#### `result->json_structs` contains the data with custom-formatting based on the feed type
-##### (For this example using events, there's a method `FeedParser::formatEvent` to conform to the FullCalendar JavaScript API, etc.)
+####`Subscriber` exposes its array of Drupal Node objects via `getNodesJSON`.
+***
+## Dev Notes -
+### Custom Data Structures
+#### `FeedParser::eventFormat` returns JSON tailored to the FullCalendar JS API
+`Subscriber` exposes this tailored data array via `getStructuresJSON` when 'event' is passed to the parser as the RSS feed type.
+#### Add custom parsing methods for additional content types, e.g. 'article'
+If 'article' is passed to the parser as the RSS feed type,
+`FeedParser` will search for and call an `articleFormat` method.
+Use the logic in {RSS_Feed_Type}Format methods to shape the custom data that will be exposed in `Subscriber::getStructuresJSON`

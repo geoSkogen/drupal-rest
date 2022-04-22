@@ -80,6 +80,7 @@ class FeedParser {
           );
 
           $result->json_nodes[] = $rest_response->getBody();
+
           $this->tagIndexFormat( $rest_response->getBody(), $node_index);
 
           if (method_exists($this, $this->rss_node_type . 'Format')) {
@@ -101,7 +102,7 @@ class FeedParser {
     return $result;
   }
 
-  function tagIndexFormat($resp_json,$node_index) {
+  protected function tagIndexFormat($resp_json,$node_index) {
     $resp_obj = json_decode($resp_json,true);
     foreach ($resp_obj['field_content_hub_tag'] as $tag_arr) {
       if (isset($this->tag_index[ $tag_arr['target_id']])) {
@@ -113,7 +114,7 @@ class FeedParser {
   }
 
 
-  function eventFormat($resp_json) {
+  protected function eventFormat($resp_json) {
     $resp_obj = json_decode($resp_json,true);
     // Build data structure for FullCalendar JS API, et al.
     $json_struct = array(
