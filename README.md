@@ -1,8 +1,7 @@
 ## GET the Drupal REST resources from a custom XML RSS feed
 ### using Views & REST UI modules.
 ### A prototype to illustrate proof of concept:
-#### subscribing to specifically tagged content the Syndication site
-##### - in a local dev environment.
+#### Subscribing to specifically tagged content on a Syndication site in a local dev environment.
 ***
 #### Publish a custom RSS feed in Drupal by [creating a View in RSS format.](https://portlandstate.atlassian.net/wiki/spaces/WEBCOMM/pages/2387477334/RSS+Feeds+in+Drupal)
 ##### (This example script uses custom content type 'event.')
@@ -25,7 +24,7 @@
 If 'article' is passed to the parser as the RSS feed type,
 `FeedParser` will search for and call an `articleFormat` method.
 Use the logic in {RSS_Feed_Type}Format methods to shape the custom data that will be exposed in `Subscriber::getStructuresJSON`
-
+### Integration 
 *The CLI command introduces a future layer of abstraction,
 where each subscribing site may have a `Syndication` object,
 executing the logic in this repo's parse_feed.php script, but via a public method that accepts the same arguments,
