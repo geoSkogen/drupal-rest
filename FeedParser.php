@@ -2,6 +2,7 @@
 
 require(__DIR__ . "/vendor/autoload.php");
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class FeedParser {
 
@@ -10,6 +11,7 @@ class FeedParser {
   protected $url_origin;
   protected $rss_node_type;
   protected $rss_feed;
+  protected $tag_index;
   public $data;
 
 
@@ -30,19 +32,32 @@ class FeedParser {
 
 
   protected function initFeed($feed_body) {
+    $rss_feed = null;
     $xml_str = $this->cleanDevXML($feed_body);
-    $rss_feed = new SimpleXMLElement($xml_str);
+    try {
+      $rss_feed = new SimpleXMLElement($xml_str);
+    } catch (Exception $e) {
+      print $e->getMessage();
+    }
     return $rss_feed;
   }
 
 
   protected function requestFeedXML() {
-    $rss_response = $this->client->request(
-      'GET',
-      $this->url_origin . '/' . $this->rss_node_type . 's-rss.xml',
-      $this->http_options
-    );
-    return $rss_response->getBody();
+    $response = '';
+    try {
+      $rss_response = $this->client->request(
+        'GET',
+        $this->url_origin . '/' . $this->rss_node_type . 's-rss.xml',
+        $this->http_options
+      );
+      $response = $rss_response->getBody();
+    } catch (RequestException $e) {
+      if ($e->hasResponse()) {
+        $response = $e->hasResponse();
+      }
+    }
+    return $response;
   }
 
 
@@ -50,29 +65,51 @@ class FeedParser {
     $result = new stdClass;
     $result->json_nodes = [];
     $result->json_structs = [];
+    $node_index = 0;
 
     $this->rss_feed = $this->initFeed($raw_xml);
 
-    foreach ($this->rss_feed->channel->item as $rss_node) {
-      // Call the REST resource associated with each item on the RSS feed
-      $rest_response = $this->client->request(
-        'GET',
-        strval($rss_node->link . '?_format=json'),
-        []
-      );
+    if ($this->rss_feed) {
+      foreach ($this->rss_feed->channel->item as $rss_node) {
+        // Call the REST resource associated with each item on the RSS feed
+        try {
+          $rest_response = $this->client->request(
+            'GET',
+            strval($rss_node->link . '?_format=json'),
+            []
+          );
 
-      $result->json_nodes[] = $rest_response->getBody();
+          $result->json_nodes[] = $rest_response->getBody();
+          $this->tagIndexFormat( $rest_response->getBody(), $node_index);
 
-      if (method_exists($this,$this->rss_node_type . 'Format')) {
-        $result->json_structs[] =
-          $this->{$this->rss_node_type . 'Format'}( $rest_response->getBody());
+          if (method_exists($this, $this->rss_node_type . 'Format')) {
+            $result->json_structs[] =
+              $this->{$this->rss_node_type . 'Format'}( $rest_response->getBody());
+          }
+          $node_index++;
+
+        } catch (RequestException $e) {
+           if ($e->hasResponse()) {
+             $rest_response = $e->hasResponse();
+             print $e->hasResponse();
+           }
+        }
       }
-      print("EVENT FIELDS\r\n");
-      print_r($result->json_structs[count($result->json_structs)-1]);
-      print("\r\n");
     }
+    $result->tag_index = $this->tag_index;
     $this->data = $result;
     return $result;
+  }
+
+  function tagIndexFormat($resp_json,$node_index) {
+    $resp_obj = json_decode($resp_json,true);
+    foreach ($resp_obj['field_content_hub_tag'] as $tag_arr) {
+      if (isset($this->tag_index[ $tag_arr['target_id']])) {
+        $this->tag_index[ $tag_arr['target_id']][] = $node_index;
+      } else {
+        $this->tag_index[ $tag_arr['target_id'] ] = [$node_index];
+      }
+    }
   }
 
 
