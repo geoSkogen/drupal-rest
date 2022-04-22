@@ -7,9 +7,9 @@
 * 3 : comma-separated value string of taxon ids
 */
 
-require(__DIR__ . '/FeedParser.php');
-require(__DIR__ . '/TagManager.php');
-require(__DIR__ . '/Subscriber.php');
+require(__DIR__ . '/src/FeedParser.php');
+require(__DIR__ . '/src/TagManager.php');
+require(__DIR__ . '/src/Subscriber.php');
 
 $rss_node_type = !empty($argv[1]) ? $argv[1] : 'event';
 $rss_host = !empty($argv[2]) ? $argv[2] : 'syndication.ddev.site';
