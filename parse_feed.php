@@ -13,7 +13,7 @@ require(__DIR__ . '/src/Subscriber.php');
 
 $rss_node_type = !empty($argv[1]) ? $argv[1] : 'event';
 $rss_host = !empty($argv[2]) ? $argv[2] : 'syndication.ddev.site';
-$tag_ids_arr = !empty($argv[3]) ? explode(',',$argv[3]) : ['831','2706','3096','3171','826'];
+$tag_ids_arr = !empty($argv[3]) ? explode(',',$argv[3]) : ['831','3096','3171','826'];
 
 $feed_parser = new FeedParser('https://' . $rss_host, $rss_node_type, null);
 $feed_data = $feed_parser->parseFeed();
