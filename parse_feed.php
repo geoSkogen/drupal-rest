@@ -34,6 +34,7 @@ $subscriber->addSubscribedStructures(
 
 // Test pattern for data tailored to a specific API : default is 'event'
 // To format data for another API, add a {rss_node_type}Format method to FeedParser, e.g. FeedParser::articleFormat
+/*
 $i = 0;
 foreach ($subscriber->getStructuresJSON() as $json_struct) {
   print("\r\n");
@@ -42,27 +43,28 @@ foreach ($subscriber->getStructuresJSON() as $json_struct) {
   print("\r\n");
   $i++;
 }
-
-// More Test Patterns :
+*/
 /*
-// Test subscription to a single tag
-$subbed_nodes_arr = $tag_manager->getSubscribedNodes(['3171']);
+// More Test Patterns :
+// Test subscription to a tag collection - same as above but with Drupal JSON
 $i = 0;
-foreach($subbed_nodes_arr as $json_node) {
+foreach ($subscriber->getNodesJSON() as $json_node) {
   print("\r\n");
-  print("Drupal Subbed Node JSON {$i}: \r\n");
+  print("Subbed content type {$rss_node_type} Drupal Node JSON {$i}: \r\n");
   print($json_node);
   print("\r\n");
   $i++;
 }
 */
-/*
 // View all Drupal Node objects in the feed
+/*
+$i = 0;
 foreach($feed_data->json_nodes as $json_node) {
   print("\r\n");
-  print("Drupal Node JSON: \r\n");
+  print("Drupal Node JSON {$i} : \r\n");
   print($json_node);
   print("\r\n");
+  $i++;
 }
 */
 /*
@@ -86,6 +88,6 @@ foreach($feed_data->tag_index as $tag_id => $node_index_arr) {
 /*
 $all_tags = array_keys($feed_data->tag_index);
 asort($all_tags);
-print 'ALL TAG IDS:'
+print 'ALL TAG IDS:';
 print_r($all_tags);
 */

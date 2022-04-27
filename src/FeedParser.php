@@ -104,7 +104,16 @@ class FeedParser {
 
   protected function tagIndexFormat($resp_json,$node_index) {
     $resp_obj = json_decode($resp_json,true);
+    
     foreach ($resp_obj['field_content_hub_tag'] as $tag_arr) {
+      if (isset($this->tag_index[ $tag_arr['target_id']])) {
+        $this->tag_index[ $tag_arr['target_id']][] = $node_index;
+      } else {
+        $this->tag_index[ $tag_arr['target_id'] ] = [$node_index];
+      }
+    }
+
+    foreach ($resp_obj['field_tags'] as $tag_arr) {
       if (isset($this->tag_index[ $tag_arr['target_id']])) {
         $this->tag_index[ $tag_arr['target_id']][] = $node_index;
       } else {

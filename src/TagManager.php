@@ -36,15 +36,17 @@ class TagManager {
   protected function getSubscribedEntities($tag_ids_arr,$entities_arr) {
     $found_entities = [];
     $found_indices = [];
-    foreach($tag_ids_arr as $tag_id) {
+    if (count($entities_arr)) {
+      foreach($tag_ids_arr as $tag_id) {
 
-      $post_index_arr = !empty($this->post_indices_by_tag_id[ $tag_id ]) ?
-        $this->post_indices_by_tag_id[ $tag_id ] : [];
+        $post_index_arr = !empty($this->post_indices_by_tag_id[ $tag_id ]) ?
+          $this->post_indices_by_tag_id[ $tag_id ] : [];
 
-      foreach($post_index_arr as $post_index) {
-        if (!in_array($post_index,$found_indices)) {
-          $found_indices[] = $post_index;
-          $found_entities[] = $entities_arr[ $post_index];
+        foreach($post_index_arr as $post_index) {
+          if (!in_array($post_index,$found_indices)) {
+            $found_indices[] = $post_index;
+            $found_entities[] = $entities_arr[ $post_index];
+          }
         }
       }
     }
