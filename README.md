@@ -10,7 +10,7 @@
 ***
 #### Run `composer install` for the Guzzle HTTP library.
 ***
-### Import a subscription on the CLI by running the 'parse_feed' script with 3 arguments:*
+### Import a subscription on the CLI by running the 'parse_feed' script with 4 arguments:
 #### *RSS_feed_content type*
 #### *Syndication_domain_name*  
 #### *CSV_of_tag_ids*
