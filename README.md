@@ -1,5 +1,5 @@
-## GET the Drupal REST resources from a custom XML RSS feed
-### using Views & REST UI modules.
+## GET the Drupal REST resources from a custom JSON or XML RSS feed
+### using Views & REST UI
 ### A prototype to illustrate proof of concept:
 #### Subscribing to specifically tagged content on a Syndication site in a local dev environment.
 ***
@@ -11,13 +11,17 @@
 #### Run `composer install` for the Guzzle HTTP library.
 ***
 ### Import a subscription on the CLI by running the 'parse_feed' script with 3 arguments:*
-#### *RSS_feed_type*
+#### *RSS_feed_content type*
 #### *Syndication_domain_name*  
 #### *CSV_of_tag_ids*
-#### Example:
-#### `php parse_feed.php event syndication.ddev.site 3171,826`
+#### *Data format of RSS feed*
+#### Examples:
+#### `php parse_feed.php event syndication.ddev.site 3171,826 rest`
+#### `php parse_feed.php article syndication.ddev.site 831,3096 xml`
 ***
-#### `Subscriber` exposes its array of Drupal Node objects via `getNodesJSON`.
+#### `FeedParser::parseFeed` accepts a string argument for the feed type, e.g. -
+##### `$feedParser->parseFeed('xml')` or `$feedParser->parseFeed('rest')`
+#### `Subscriber` exposes the array of Drupal Node objects it's subscribed to via `getNodesJSON`.
 ***
 ## Dev Notes
 ### Custom Data Structures
@@ -29,7 +33,7 @@ If 'article' is passed to the parser as the RSS feed type,
 Use the logic in {RSS_Feed_Type}Format methods to shape the custom data that will be exposed in `Subscriber::getStructuresJSON`
 ### Integration
 *The CLI command introduces a future layer of abstraction,
-where each subscribing site may have a `Syndication` object,
+where each subscribubg site may have a `Syndication` object,
 executing the logic in this repo's parse_feed.php script, but via a public method that accepts the same arguments,
  e.g.
-##### `$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr);`
+##### `$feed_nodes = Syndication::getFeed($rss_feed_type,$syndication_domain_name,$tag_ids_arr,$response_format)`

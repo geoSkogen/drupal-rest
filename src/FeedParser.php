@@ -21,17 +21,38 @@ class FeedParser {
     $this->rss_node_type = $rss_node_type;
     $this->http_options = is_array($http_options) ?
       $http_options : ["headers" => [], "body" => ''];
+    $this->setDataDefaults();
+
   }
 
 
-  public function parseFeed() {
-    $raw_xml = $this->requestFeedXML();
-    $data_obj = $this->requestFeedJSON($raw_xml);
+  public function parseFeed($format) {
+    switch($format) {
+      case 'rest' :
+        $data_obj = $this->requestRESTFeedJSON();
+        break;
+      case 'xml' :
+        $raw_xml = $this->requestFeedXML();
+        $data_obj = $this->requestXMLFeedJSON($raw_xml);
+        break;
+      default :
+      $this->setDataDefaults();
+      $data_obj = $this->data;
+    }
     return $data_obj;
   }
 
 
-  protected function initFeed($feed_body) {
+  protected function setDataDefaults() {
+    $data_obj = new stdClass;
+    $data_obj->json_nodes = [];
+    $data_obj->json_structs = [];
+    $data_obj->tag_index = [];
+    $this->data = $data_obj;
+  }
+
+
+  protected function initXMLFeed($feed_body) {
     $rss_feed = null;
     $xml_str = $this->cleanDevXML($feed_body);
     try {
@@ -61,13 +82,13 @@ class FeedParser {
   }
 
 
-  protected function requestFeedJSON($raw_xml) {
+  protected function requestXMLFeedJSON($raw_xml) {
     $result = new stdClass;
     $result->json_nodes = [];
     $result->json_structs = [];
     $node_index = 0;
 
-    $this->rss_feed = $this->initFeed($raw_xml);
+    $this->rss_feed = $this->initXMLFeed($raw_xml);
 
     if ($this->rss_feed) {
       foreach ($this->rss_feed->channel->item as $rss_node) {
@@ -102,9 +123,48 @@ class FeedParser {
     return $result;
   }
 
+  protected function requestRESTFeedJSON() {
+    $result = new stdClass;
+    $result->json_nodes = [];
+    $result->json_structs = [];
+    $node_index = 0;
+
+    try {
+      $rest_response = $this->client->request(
+        'GET',
+        $this->url_origin . '/' . $this->rss_node_type . 's-rss?_format=json',
+        []
+      );
+    } catch (RequestException $e) {
+       if ($e->hasResponse()) {
+         $err_response = $e->hasResponse();
+         print $e->hasResponse();
+       }
+    }
+
+    if ($rest_response && $rest_response->getBody()) {
+      $response_array = json_decode($rest_response->getBody(),true);
+      foreach($response_array as $node_obj) {
+        $result->json_nodes[] = json_encode($node_obj);
+
+        $this->tagIndexFormat( json_encode($node_obj), $node_index);
+
+        if (method_exists($this, $this->rss_node_type . 'Format')) {
+            $result->json_structs[] =
+              $this->{$this->rss_node_type . 'Format'}( json_encode($node_obj));
+        }
+        $node_index++;
+      }
+    }
+    $result->tag_index = $this->tag_index;
+    $this->data = $result;
+    return $result;
+  }
+
+
   protected function tagIndexFormat($resp_json,$node_index) {
     $resp_obj = json_decode($resp_json,true);
-    
+
     foreach ($resp_obj['field_content_hub_tag'] as $tag_arr) {
       if (isset($this->tag_index[ $tag_arr['target_id']])) {
         $this->tag_index[ $tag_arr['target_id']][] = $node_index;

@@ -2,9 +2,10 @@
 
 /**
 * CLI Arguments -
-* 1 : rss feed type
+* 1 : rss feed content type
 * 2 : syndication domain name
 * 3 : comma-separated value string of taxon ids
+* 4 : data format of feed (REST, XML)
 */
 
 require(__DIR__ . '/src/FeedParser.php');
@@ -14,9 +15,10 @@ require(__DIR__ . '/src/Subscriber.php');
 $rss_node_type = !empty($argv[1]) ? $argv[1] : 'event';
 $rss_host = !empty($argv[2]) ? $argv[2] : 'syndication.ddev.site';
 $tag_ids_arr = !empty($argv[3]) ? explode(',',$argv[3]) : ['831','3096','3171','826'];
+$feed_format = empty($argv[4]) ? $argv[4] : 'rest';
 
 $feed_parser = new FeedParser('https://' . $rss_host, $rss_node_type, null);
-$feed_data = $feed_parser->parseFeed();
+$feed_data = $feed_parser->parseFeed($feed_format);
 
 $tag_manager = new TagManager(
   $feed_data->json_nodes, $feed_data->json_structs, $feed_data->tag_index
@@ -44,7 +46,7 @@ foreach ($subscriber->getStructuresJSON() as $json_struct) {
   $i++;
 }
 */
-/*
+
 // More Test Patterns :
 // Test subscription to a tag collection - same as above but with Drupal JSON
 $i = 0;
@@ -55,7 +57,7 @@ foreach ($subscriber->getNodesJSON() as $json_node) {
   print("\r\n");
   $i++;
 }
-*/
+
 // View all Drupal Node objects in the feed
 /*
 $i = 0;

@@ -1,7 +1,7 @@
 <?php
 
-require(__DIR__ . '/src/Schema.php');
-require(__DIR__ . '/vendor/autoload.php');
+require(__DIR__ . '/../src/Schema.php');
+require(__DIR__ . '/../vendor/autoload.php');
 use GuzzleHttp\Client;
 
 $tag_schema = new Schema('new_tags','/../');
